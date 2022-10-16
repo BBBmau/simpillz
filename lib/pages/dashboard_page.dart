@@ -168,31 +168,6 @@ class _DashboardPageState extends State<DashboardPage> {
                           );
                         },
                       ),
-                      // child: SingleChildScrollView(
-                      //   child: Column(
-                      //     mainAxisAlignment: MainAxisAlignment.start,
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     children: <Widget>[
-                      // const Padding(
-                      //   padding: EdgeInsets.all(10.0),
-                      // ),
-                      // DosageCard(
-                      //   data: Data(
-                      //       dosageType: "liquid",
-                      //       dosageName: "Levothyroxine",
-                      //       dosageTime: "day",
-                      //       dosageAmount: "1ml dose before meal"),
-                      // ),
-                      // DosageCard(
-                      //   data: Data(
-                      //       dosageType: "pill",
-                      //       dosageName: "Oxycodone",
-                      //       dosageTime: "night",
-                      //       dosageAmount: "2 tablets after meal"),
-                      // ),
-                      //     ],
-                      //   ),
-                      // ),
                     ),
                   ),
                 ],
