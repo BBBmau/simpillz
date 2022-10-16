@@ -1,9 +1,11 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:flutter/material.dart';
+import 'package:splashscreen/splashscreen.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:motor_flutter/motor_flutter.dart';
-import 'package:motor_flutter_starter/pages/dashboard_page.dart';
 
-import 'pages/start_page.dart';
+import 'package:motor_flutter_starter/pages/start_page.dart';
 
 Future<void> main() async {
   await MotorFlutter.init();
@@ -13,25 +15,43 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Motor Flutter Demo',
+      title: 'TEMPNAME',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const StartPage(),
+      home: const Splash2(),
+      debugShowCheckedModeBanner: false,
     );
+  }
+}
+
+class Splash2 extends StatelessWidget {
+  const Splash2({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return SplashScreen(
+      seconds: 1,
+      navigateAfterSeconds: const SecondScreen(),
+      title: const Text(
+        'TEMPNAME',
+        textScaleFactor: 2,
+      ),
+      // image: Image.network(
+      //     'https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png'),
+      loadingText: const Text("Loading"),
+      photoSize: 100.0,
+      loaderColor: Colors.blue,
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  const SecondScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const StartPage();
   }
 }

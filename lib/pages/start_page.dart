@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:motor_flutter/motor_flutter.dart';
 import 'package:motor_flutter_starter/pages/dashboard_page.dart';
+import 'register.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -30,7 +31,8 @@ class _StartPageState extends State<StartPage> {
         _authInfo = authInfo;
       });
       Future.delayed(const Duration(milliseconds: 400), () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const DashboardPage()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DashboardPage()));
       });
     }
   }
@@ -45,47 +47,114 @@ class _StartPageState extends State<StartPage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              'Motor Starter Demo',
-              style: Theme.of(context).textTheme.headline3,
+      body: SafeArea(
+        child: Center(
+          child: Stack(children: [
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.blue,
+                    Colors.green,
+                  ],
+                ),
+              ),
             ),
-            ContinueOnSonrButton(
-              onSuccess: (ai) {
-                _setAuthInfo(ai);
-              },
-            ),
-            TextButton(
-                onPressed: () {
-                  final authInfo = box.read('authInfo');
-                  if (authInfo != null) {
-                    _authInfo = AuthInfo.fromJson(authInfo);
-                    MotorFlutter.to.login(
-                      password: _authInfo?.password ?? '',
-                      address: _authInfo?.address ?? '',
-                      dscKey: _authInfo?.aesDscKey,
-                      pskKey: _authInfo?.aesPskKey,
-                    );
-                  } else {
-                    throw Exception('No authInfo found');
-                  }
-                },
-                child: const Text(
-                  'Login',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 17,
-                  ),
-                ))
-          ],
+            loginForm(),
+          ]),
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
+  }
+}
+
+TextEditingController passController = TextEditingController();
+
+class loginForm extends StatelessWidget {
+  loginForm({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(80, 15, 80, 25),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            controller: passController,
+            decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                labelText: "Password"),
+          ),
+        ),
+        buttonPaths()
+      ],
+    );
+  }
+}
+
+class buttonPaths extends StatelessWidget {
+  buttonPaths({Key? key}) : super(key: key);
+
+  final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+    minimumSize: const Size(80, 50),
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(2)),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      ElevatedButton(
+          style: raisedButtonStyle,
+          onPressed: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const DashboardPage()),
+            );
+            // if (MotorFlutter.isReady) {
+            //   final resp = await showDialog<AuthInfo>(
+            //     context: context,
+            //     builder: (BuildContext context) {
+            //       final completer = Completer<AuthInfo>();
+            //       return CreatePasswordPage(
+            //         onError: onError,
+            //         onSuccess: (ai) {
+            //           Future.delayed(Duration(milliseconds: 750), () {
+            //             completer.complete(ai);
+            //             Navigator.of(context).pop(ai);
+            //           });
+            //         },
+            //       );
+            //     },
+            //   );
+            //   onSuccess?.call(resp);
+            // }
+          },
+          child: const Text(
+            "Login",
+            textScaleFactor: 1.2,
+          )),
+      const SizedBox(height: 40),
+      ElevatedButton(
+          style: raisedButtonStyle,
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => register()));
+          },
+          child: const Text(
+            "Register",
+            textScaleFactor: 1.2,
+          ))
+    ]);
   }
 }
