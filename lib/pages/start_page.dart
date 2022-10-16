@@ -102,7 +102,7 @@ class _StartPageState extends State<StartPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Logging in as ${_authInfo?.address}...',
+                          'Logging in...',
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -123,6 +123,7 @@ class _StartPageState extends State<StartPage> {
 }
 
 TextEditingController passController = TextEditingController();
+TextEditingController userController = TextEditingController();
 
 class loginForm extends StatelessWidget {
   loginForm({Key? key}) : super(key: key);
@@ -135,7 +136,19 @@ class loginForm extends StatelessWidget {
         Padding(
           padding: EdgeInsets.fromLTRB(80, 15, 80, 25),
           child: TextField(
-            keyboardType: TextInputType.number,
+            controller: userController,
+            decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                labelText: "User"),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(80, 15, 80, 25),
+          child: TextField(
             controller: passController,
             decoration: const InputDecoration(
                 filled: true,
@@ -173,7 +186,12 @@ class _buttonPathsState extends State<buttonPaths> {
       ElevatedButton(
           style: raisedButtonStyle,
           onPressed: () async {
-            _login();
+            final res = await MotorFlutter.to.login(
+                password: passController.text, address: userController.text);
+            if (res == null) {
+              throw Exception('Login failed');
+            }
+            print('Account logged in successfully: ${_authInfo!.address}');
           },
           child: const Text(
             "Login",
