@@ -52,7 +52,8 @@ class _StartPageState extends State<StartPage> {
       _existingUser = _authInfo != null;
     });
     _login(context);
-    super.initState();
+    print("User: ${_authInfo!.address}");
+    print("Password: ${_authInfo!.password}");
   }
 
   void _setAuthInfo(AuthInfo? authInfo) {
