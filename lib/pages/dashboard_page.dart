@@ -24,6 +24,16 @@ class _DashboardPageState extends State<DashboardPage> {
                 ],
               ),
             ),
+            child: const Center(
+              child: Text(
+                'Dashboard Page!',
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ),
       ),
