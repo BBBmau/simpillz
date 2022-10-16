@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'input_page.dart';
 
 class Data {
   String dosageType;
@@ -12,7 +13,7 @@ class Data {
       this.dosageAmount = ''});
 }
 
-bool isAuthenticated = false;
+bool isPrimaryCaretaker = true;
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -88,23 +89,28 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: isAuthenticated
-                        ? const [
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 25,
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.black,
-                                size: 30,
-                              ),
-                            ),
-                            SizedBox(width: 30),
-                          ]
-                        : [],
-                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    if (isPrimaryCaretaker)
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const InputPage()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(50, 50),
+                          shape: const CircleBorder(),
+                          backgroundColor: Colors.white,
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                      ),
+                    const SizedBox(width: 30),
+                  ]),
                   const Padding(
                     padding: EdgeInsets.all(10.0),
                   ),
@@ -236,7 +242,7 @@ class DosageCard extends StatelessWidget {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: isAuthenticated
+                  child: isPrimaryCaretaker
                       ? const Icon(
                           Icons.more_vert,
                           color: Colors.white,
