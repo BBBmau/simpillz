@@ -3,6 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:motor_flutter/motor_flutter.dart';
 import 'package:motor_flutter_starter/pages/dashboard_page.dart';
 import 'register.dart';
+import 'package:motor_flutter_starter/models/auth_lib.dart' as authCall;
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -20,15 +21,46 @@ class StartPage extends StatefulWidget {
   State<StartPage> createState() => _StartPageState();
 }
 
+final box = GetStorage();
+AuthInfo? _authInfo;
+bool _existingUser = false;
+
+_login(BuildContext context) async {
+  if (_authInfo == null) {
+    throw Exception('AuthInfo was not found');
+  }
+  await MotorFlutter.to.login(
+    password: _authInfo?.password ?? '',
+    address: _authInfo?.address ?? '',
+    dscKey: _authInfo?.aesDscKey,
+    pskKey: _authInfo?.aesPskKey,
+  );
+
+  Future.delayed(const Duration(milliseconds: 400), () {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const DashboardPage()));
+  });
+}
+
 class _StartPageState extends State<StartPage> {
-  final box = GetStorage();
-  AuthInfo? _authInfo;
+  @override
+  void initState() {
+    final value = box.read('authInfo');
+    final existingAuthInfo = value != null ? AuthInfo.fromJson(value) : null;
+    setState(() {
+      _authInfo = existingAuthInfo;
+      _existingUser = _authInfo != null;
+    });
+    _login(context);
+    print("User: ${_authInfo!.address}");
+    print("Password: ${_authInfo!.password}");
+  }
 
   void _setAuthInfo(AuthInfo? authInfo) {
     if (authInfo != null) {
       box.write('authInfo', authInfo.writeToJson());
       setState(() {
-        _authInfo = authInfo;
+        _authInfo = authCall.getAuthInfo();
       });
       Future.delayed(const Duration(milliseconds: 400), () {
         Navigator.push(context,
@@ -62,7 +94,28 @@ class _StartPageState extends State<StartPage> {
                 ),
               ),
             ),
-            loginForm(),
+            !_existingUser
+                ? loginForm()
+                : Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Logging in...',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        const CircularProgressIndicator(
+                          color: Colors.blueAccent,
+                        ),
+                      ],
+                    ),
+                  ),
+            // This trailing comma makes auto-formatting nicer for build methods.,
           ]),
         ),
       ),
@@ -71,6 +124,7 @@ class _StartPageState extends State<StartPage> {
 }
 
 TextEditingController passController = TextEditingController();
+TextEditingController userController = TextEditingController();
 
 class loginForm extends StatelessWidget {
   loginForm({Key? key}) : super(key: key);
@@ -83,7 +137,19 @@ class loginForm extends StatelessWidget {
         Padding(
           padding: EdgeInsets.fromLTRB(80, 15, 80, 25),
           child: TextField(
-            keyboardType: TextInputType.number,
+            controller: userController,
+            decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                labelText: "User"),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(80, 15, 80, 25),
+          child: TextField(
             controller: passController,
             decoration: const InputDecoration(
                 filled: true,
@@ -100,9 +166,13 @@ class loginForm extends StatelessWidget {
   }
 }
 
-class buttonPaths extends StatelessWidget {
-  buttonPaths({Key? key}) : super(key: key);
+class buttonPaths extends StatefulWidget {
+  const buttonPaths({Key? key}) : super(key: key);
+  @override
+  State<buttonPaths> createState() => _buttonPathsState();
+}
 
+class _buttonPathsState extends State<buttonPaths> {
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     minimumSize: const Size(80, 50),
     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -117,28 +187,12 @@ class buttonPaths extends StatelessWidget {
       ElevatedButton(
           style: raisedButtonStyle,
           onPressed: () async {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const DashboardPage()),
-            );
-            // if (MotorFlutter.isReady) {
-            //   final resp = await showDialog<AuthInfo>(
-            //     context: context,
-            //     builder: (BuildContext context) {
-            //       final completer = Completer<AuthInfo>();
-            //       return CreatePasswordPage(
-            //         onError: onError,
-            //         onSuccess: (ai) {
-            //           Future.delayed(Duration(milliseconds: 750), () {
-            //             completer.complete(ai);
-            //             Navigator.of(context).pop(ai);
-            //           });
-            //         },
-            //       );
-            //     },
-            //   );
-            //   onSuccess?.call(resp);
-            // }
+            final res = await MotorFlutter.to.login(
+                password: passController.text, address: userController.text);
+            if (res == null) {
+              throw Exception('Login failed');
+            }
+            print('Account logged in successfully: ${_authInfo!.address}');
           },
           child: const Text(
             "Login",
@@ -156,5 +210,37 @@ class buttonPaths extends StatelessWidget {
             textScaleFactor: 1.2,
           ))
     ]);
+  }
+
+  _login() async {
+    if (_authInfo == null) {
+      throw Exception('AuthInfo was not found');
+    }
+    await MotorFlutter.to.login(
+      password: _authInfo?.password ?? '',
+      address: _authInfo?.address ?? '',
+      dscKey: _authInfo?.aesDscKey,
+      pskKey: _authInfo?.aesPskKey,
+    );
+
+    Future.delayed(const Duration(milliseconds: 400), () {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const DashboardPage()));
+    });
+  }
+
+  void _setAuthInfo(AuthInfo? authInfo) {
+    if (authInfo != null) {
+      box.write('authInfo', authInfo.writeToJson());
+      setState(() {
+        _authInfo = authInfo;
+      });
+      Future.delayed(const Duration(milliseconds: 400), () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DashboardPage()));
+      });
+    } else {
+      throw Exception('AuthInfo was not passed to save');
+    }
   }
 }
