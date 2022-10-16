@@ -14,6 +14,17 @@ class Data {
 }
 
 bool isPrimaryCaretaker = true;
+final List drugs = [
+  ["liquid", "Levothyroxine", "day", "1ml dose before meal"],
+  ["pill", "Oxycodone", "night", "2 tablets after meal"]
+];
+
+// final List<String> drugs = [
+//   "liquid",
+//   "Levothyroxine",
+//   "day",
+//   "1ml dose before meal"
+// ];
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -116,6 +127,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   Expanded(
                     child: Container(
+                      padding: const EdgeInsets.only(top: 10),
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -123,31 +135,64 @@ class _DashboardPageState extends State<DashboardPage> {
                           topLeft: Radius.circular(40.0),
                         ),
                       ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            const Padding(
-                              padding: EdgeInsets.all(10.0),
+                      child: ListView.builder(
+                        itemCount: drugs.length,
+                        itemBuilder: (context, index) {
+                          final drugType = drugs[index][0];
+                          final drugName = drugs[index][1];
+                          final drugTime = drugs[index][2];
+                          final drugAmount = drugs[index][3];
+                          return Dismissible(
+                            key: Key(drugName),
+                            onDismissed: (direction) {
+                              setState(() {
+                                drugs.removeAt(index);
+                              });
+
+                              // Then show a snackbar.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('$drugName dismissed')));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 10),
+                              child: DosageCard(
+                                data: Data(
+                                    dosageType: drugType,
+                                    dosageName: drugName,
+                                    dosageTime: drugTime,
+                                    dosageAmount: drugAmount),
+                              ),
                             ),
-                            DosageCard(
-                              data: Data(
-                                  dosageType: "liquid",
-                                  dosageName: "Levothyroxine",
-                                  dosageTime: "day",
-                                  dosageAmount: "1ml dose before meal"),
-                            ),
-                            DosageCard(
-                              data: Data(
-                                  dosageType: "pill",
-                                  dosageName: "Oxycodone",
-                                  dosageTime: "night",
-                                  dosageAmount: "2 tablets after meal"),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
+                      // child: SingleChildScrollView(
+                      //   child: Column(
+                      //     mainAxisAlignment: MainAxisAlignment.start,
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     children: <Widget>[
+                      // const Padding(
+                      //   padding: EdgeInsets.all(10.0),
+                      // ),
+                      // DosageCard(
+                      //   data: Data(
+                      //       dosageType: "liquid",
+                      //       dosageName: "Levothyroxine",
+                      //       dosageTime: "day",
+                      //       dosageAmount: "1ml dose before meal"),
+                      // ),
+                      // DosageCard(
+                      //   data: Data(
+                      //       dosageType: "pill",
+                      //       dosageName: "Oxycodone",
+                      //       dosageTime: "night",
+                      //       dosageAmount: "2 tablets after meal"),
+                      // ),
+                      //     ],
+                      //   ),
+                      // ),
                     ),
                   ),
                 ],
@@ -188,70 +233,67 @@ class DosageCard extends StatelessWidget {
       colorIcon = Colors.black;
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: TextButton(
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.all(20),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            backgroundColor: Colors.blue,
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.all(20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        backgroundColor: Colors.blue,
+      ),
+      onPressed: (() => {}),
+      child: Row(
+        children: [
+          const SizedBox(width: 5),
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 22,
+            child: Icon(
+              drugIcon,
+              color: Colors.blue,
+            ),
           ),
-          onPressed: (() => {}),
-          child: Row(
+          Align(
+            widthFactor: 0.6,
+            heightFactor: 1.8,
+            alignment: Alignment.bottomRight,
+            child: CircleAvatar(
+              backgroundColor: Colors.indigo,
+              radius: 15,
+              child: Icon(
+                timeIcon,
+                size: 20,
+                color: colorIcon,
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(width: 5),
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 22,
-                child: Icon(
-                  drugIcon,
-                  color: Colors.blue,
-                ),
-              ),
-              Align(
-                widthFactor: 0.6,
-                heightFactor: 1.8,
-                alignment: Alignment.bottomRight,
-                child: CircleAvatar(
-                  backgroundColor: Colors.indigo,
-                  radius: 15,
-                  child: Icon(
-                    timeIcon,
-                    size: 20,
-                    color: colorIcon,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(data.dosageName,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold)),
-                  Text(data.dosageAmount,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal)),
-                ],
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: isPrimaryCaretaker
-                      ? const Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                        )
-                      : null,
-                ),
-              ),
+              Text(data.dosageName,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
+              Text(data.dosageAmount,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal)),
             ],
-          )),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: isPrimaryCaretaker
+                  ? const Icon(
+                      Icons.more_vert,
+                      color: Colors.white,
+                    )
+                  : null,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
