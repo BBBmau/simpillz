@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:motor_flutter_starter/pages/dashboard_page.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,17 +42,54 @@ class register extends StatelessWidget {
 
 TextEditingController passController = TextEditingController();
 
-class registerForm extends StatelessWidget {
+class registerForm extends StatefulWidget {
   final ResponseCallback<AuthInfo>? onSuccess;
   final ErrorCallback? onError;
   const registerForm({Key? key, this.onSuccess, this.onError})
       : super(key: key);
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  @override
+  State<registerForm> createState() => _registerFormState();
+}
+
+class _registerFormState extends State<registerForm> {
+  final box = GetStorage();
+  AuthInfo? _authInfo;
+
+  void _setAuthInfo(AuthInfo? authInfo) {
+    if (authInfo != null) {
+      box.write('authInfo', authInfo.writeToJson());
+      setState(() {
+        _authInfo = authInfo;
+      });
+      Future.delayed(const Duration(milliseconds: 400), () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DashboardPage()));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        sonrRegister(onSuccess: (authInfo) => {print(authInfo.address)}),
+        sonrRegister(
+          onSuccess: (ai) => _setAuthInfo(ai),
+          onError: (e) {
+            if (kDebugMode) {
+              print(e);
+            }
+          },
+        ),
         buttonPaths()
       ],
     );

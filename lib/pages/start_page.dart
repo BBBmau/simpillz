@@ -20,9 +20,39 @@ class StartPage extends StatefulWidget {
   State<StartPage> createState() => _StartPageState();
 }
 
+final box = GetStorage();
+AuthInfo? _authInfo;
+bool _existingUser = false;
+
+_login(BuildContext context) async {
+  if (_authInfo == null) {
+    throw Exception('AuthInfo was not found');
+  }
+  await MotorFlutter.to.login(
+    password: _authInfo?.password ?? '',
+    address: _authInfo?.address ?? '',
+    dscKey: _authInfo?.aesDscKey,
+    pskKey: _authInfo?.aesPskKey,
+  );
+
+  Future.delayed(const Duration(milliseconds: 400), () {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const DashboardPage()));
+  });
+}
+
 class _StartPageState extends State<StartPage> {
-  final box = GetStorage();
-  AuthInfo? _authInfo;
+  @override
+  void initState() {
+    final value = box.read('authInfo');
+    final existingAuthInfo = value != null ? AuthInfo.fromJson(value) : null;
+    setState(() {
+      _authInfo = existingAuthInfo;
+      _existingUser = _authInfo != null;
+    });
+    _login(context);
+    super.initState();
+  }
 
   void _setAuthInfo(AuthInfo? authInfo) {
     if (authInfo != null) {
@@ -100,9 +130,14 @@ class loginForm extends StatelessWidget {
   }
 }
 
-class buttonPaths extends StatelessWidget {
+class buttonPaths extends StatefulWidget {
   buttonPaths({Key? key}) : super(key: key);
+  @override
+  State<buttonPaths> createState() => _buttonPathsState();
+}
+//lass _StartPageState extends State<StartPage> {
 
+class _buttonPathsState extends State<buttonPaths> {
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     minimumSize: const Size(80, 50),
     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -156,5 +191,37 @@ class buttonPaths extends StatelessWidget {
             textScaleFactor: 1.2,
           ))
     ]);
+  }
+
+  _login() async {
+    if (_authInfo == null) {
+      throw Exception('AuthInfo was not found');
+    }
+    await MotorFlutter.to.login(
+      password: _authInfo?.password ?? '',
+      address: _authInfo?.address ?? '',
+      dscKey: _authInfo?.aesDscKey,
+      pskKey: _authInfo?.aesPskKey,
+    );
+
+    Future.delayed(const Duration(milliseconds: 400), () {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const DashboardPage()));
+    });
+  }
+
+  void _setAuthInfo(AuthInfo? authInfo) {
+    if (authInfo != null) {
+      box.write('authInfo', authInfo.writeToJson());
+      setState(() {
+        _authInfo = authInfo;
+      });
+      Future.delayed(const Duration(milliseconds: 400), () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DashboardPage()));
+      });
+    } else {
+      throw Exception('AuthInfo was not passed to save');
+    }
   }
 }
