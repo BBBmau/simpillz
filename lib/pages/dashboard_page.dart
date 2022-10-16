@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -20,7 +19,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         shadowColor: Colors.transparent,
         leadingWidth: 100,
-        toolbarHeight: 100,
+        toolbarHeight: 80,
       ),
       body: SafeArea(
         child: Center(
@@ -74,51 +73,82 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   Expanded(
                     child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(40.0),
-                            topLeft: Radius.circular(40.0),
-                          ),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(40.0),
+                          topLeft: Radius.circular(40.0),
                         ),
+                      ),
+                      child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const <Widget>[
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 40),
-                              child: TextButton(
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.all(20),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                  backgroundColor: Colors.grey,
-                                ),
-                                onPressed: (() => {}),
-                                child: Row(
-                                  children: const [
-                                    SizedBox(width: 20),
-                                    Expanded(
-                                        child: Text(
-                                      "Levothyroxine",
-                                      style: TextStyle(color: Colors.white),
-                                    )),
-                                    Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              padding: EdgeInsets.all(10.0),
                             ),
+                            DosageCard(),
+                            DosageCard(),
+                            DosageCard(),
+                            DosageCard(),
+                            DosageCard(),
+                            DosageCard(),
+                            DosageCard(),
+                            DosageCard(),
+                            DosageCard(),
                           ],
-                        )),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class DosageCard extends StatelessWidget {
+  const DosageCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.all(20),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          backgroundColor: Colors.blue,
+        ),
+        onPressed: (() => {}),
+        child: Row(
+          children: const [
+            SizedBox(width: 5),
+            CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 20,
+              child: Icon(
+                Icons.water,
+                color: Colors.blue,
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+                child: Text(
+              "Levothyroxine",
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            )),
+            Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+          ],
         ),
       ),
     );
