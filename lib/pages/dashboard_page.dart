@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+class Data {
+  String doseType;
+  String dosageName;
+  String dosageTime;
+  String dosageAmount;
+  Data(
+      {this.doseType = '',
+      this.dosageName = '',
+      this.dosageTime = '',
+      this.dosageAmount = ''});
+}
+
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
@@ -84,19 +96,24 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const <Widget>[
-                            Padding(
+                          children: <Widget>[
+                            const Padding(
                               padding: EdgeInsets.all(10.0),
                             ),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
+                            DosageCard(
+                              data: Data(
+                                  doseType: "liquid",
+                                  dosageName: "Levothyroxine",
+                                  dosageTime: "day",
+                                  dosageAmount: "1ml dose before meal"),
+                            ),
+                            DosageCard(
+                              data: Data(
+                                  doseType: "pill",
+                                  dosageName: "Oxycodone",
+                                  dosageTime: "night",
+                                  dosageAmount: "2 tablets after meal"),
+                            ),
                           ],
                         ),
                       ),
@@ -113,7 +130,8 @@ class _DashboardPageState extends State<DashboardPage> {
 }
 
 class DosageCard extends StatelessWidget {
-  const DosageCard({super.key});
+  final Data data;
+  const DosageCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -128,26 +146,55 @@ class DosageCard extends StatelessWidget {
         ),
         onPressed: (() => {}),
         child: Row(
-          children: const [
-            SizedBox(width: 5),
-            CircleAvatar(
+          children: [
+            const SizedBox(width: 5),
+            const CircleAvatar(
               backgroundColor: Colors.white,
-              radius: 20,
+              radius: 22,
               child: Icon(
-                Icons.water,
+                Icons.water_drop,
                 color: Colors.blue,
               ),
             ),
-            SizedBox(width: 10),
-            Expanded(
-                child: Text(
-              "Levothyroxine",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            )),
-            Icon(
-              Icons.more_vert,
-              color: Colors.white,
+            const Align(
+              widthFactor: 0.6,
+              heightFactor: 1.8,
+              alignment: Alignment.bottomRight,
+              child: CircleAvatar(
+                backgroundColor: Colors.indigo,
+                radius: 15,
+                child: Icon(
+                  Icons.sunny,
+                  size: 20,
+                  color: Colors.yellow,
+                ),
+              ),
             ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(data.dosageName,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
+                Text(data.dosageAmount,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal)),
+              ],
+            ),
+            const Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+              ),
+            )
           ],
         ),
       ),

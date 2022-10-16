@@ -40,7 +40,7 @@ class Splash2 extends StatelessWidget {
         textScaleFactor: 2,
       ),
       // image: Image.network(
-      //     'https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png'),
+      //     'https://example.com/pic.png'),
       loadingText: const Text("Loading"),
       photoSize: 100.0,
       loaderColor: Colors.blue,
