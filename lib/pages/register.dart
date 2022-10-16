@@ -75,8 +75,8 @@ class _registerFormState extends State<registerForm> {
       setState(() {
         auth = authInfo;
       });
-      print("User: ${auth!.address}");
-      print("Password: ${auth!.password}");
+      //print("User: ${auth!.address}");
+      //print("Password: ${auth!.password}");
       Future.delayed(const Duration(milliseconds: 400), () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const DashboardPage()));
@@ -93,7 +93,7 @@ class _registerFormState extends State<registerForm> {
           onSuccess: (ai) => _setAuthInfo(ai),
           onError: (e) {
             if (kDebugMode) {
-              print(e);
+              //print(e);
             }
           },
         ),
