@@ -13,6 +13,12 @@ import 'package:get/get.dart';
 import 'package:motor_flutter/motor_flutter.dart';
 import 'package:fancy_password_field/fancy_password_field.dart';
 
+AuthInfo? auth;
+
+getAuthInfo() {
+  return auth;
+}
+
 class register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -62,13 +68,12 @@ class registerForm extends StatefulWidget {
 
 class _registerFormState extends State<registerForm> {
   final box = GetStorage();
-  AuthInfo? _authInfo;
 
   void _setAuthInfo(AuthInfo? authInfo) {
     if (authInfo != null) {
       box.write('authInfo', authInfo.writeToJson());
       setState(() {
-        _authInfo = authInfo;
+        auth = authInfo;
       });
       Future.delayed(const Duration(milliseconds: 400), () {
         Navigator.push(context,

@@ -3,6 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:motor_flutter/motor_flutter.dart';
 import 'package:motor_flutter_starter/pages/dashboard_page.dart';
 import 'register.dart';
+import 'package:motor_flutter_starter/models/auth_lib.dart' as authCall;
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -58,7 +59,7 @@ class _StartPageState extends State<StartPage> {
     if (authInfo != null) {
       box.write('authInfo', authInfo.writeToJson());
       setState(() {
-        _authInfo = authInfo;
+        _authInfo = authCall.getAuthInfo();
       });
       Future.delayed(const Duration(milliseconds: 400), () {
         Navigator.push(context,
@@ -92,7 +93,28 @@ class _StartPageState extends State<StartPage> {
                 ),
               ),
             ),
-            loginForm(),
+            !_existingUser
+                ? loginForm()
+                : Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Logging in as ${_authInfo?.address}...',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        const CircularProgressIndicator(
+                          color: Colors.blueAccent,
+                        ),
+                      ],
+                    ),
+                  ),
+            // This trailing comma makes auto-formatting nicer for build methods.,
           ]),
         ),
       ),
@@ -131,11 +153,10 @@ class loginForm extends StatelessWidget {
 }
 
 class buttonPaths extends StatefulWidget {
-  buttonPaths({Key? key}) : super(key: key);
+  const buttonPaths({Key? key}) : super(key: key);
   @override
   State<buttonPaths> createState() => _buttonPathsState();
 }
-//lass _StartPageState extends State<StartPage> {
 
 class _buttonPathsState extends State<buttonPaths> {
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
@@ -152,28 +173,7 @@ class _buttonPathsState extends State<buttonPaths> {
       ElevatedButton(
           style: raisedButtonStyle,
           onPressed: () async {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const DashboardPage()),
-            );
-            // if (MotorFlutter.isReady) {
-            //   final resp = await showDialog<AuthInfo>(
-            //     context: context,
-            //     builder: (BuildContext context) {
-            //       final completer = Completer<AuthInfo>();
-            //       return CreatePasswordPage(
-            //         onError: onError,
-            //         onSuccess: (ai) {
-            //           Future.delayed(Duration(milliseconds: 750), () {
-            //             completer.complete(ai);
-            //             Navigator.of(context).pop(ai);
-            //           });
-            //         },
-            //       );
-            //     },
-            //   );
-            //   onSuccess?.call(resp);
-            // }
+            _login();
           },
           child: const Text(
             "Login",
