@@ -47,7 +47,25 @@ class _StartPageState extends State<StartPage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       backgroundColor: Colors.black,
-      body: loginForm(),
+      body: SafeArea(
+        child: Center(
+          child: Stack(children: [
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.blue,
+                    Colors.green,
+                  ],
+                ),
+              ),
+            ),
+            loginForm(),
+          ]),
+        ),
+      ),
     );
   }
 }
