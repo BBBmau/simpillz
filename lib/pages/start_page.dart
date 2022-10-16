@@ -3,7 +3,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:motor_flutter/motor_flutter.dart';
 import 'package:motor_flutter_starter/pages/dashboard_page.dart';
 import 'register.dart';
+import 'package:motor_flutter_starter/models/sonr_data.dart' as sonrData;
 import 'package:motor_flutter_starter/models/auth_lib.dart' as authCall;
+
+sonrData.sonrClass patient = sonrData.sonrClass();
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -29,6 +32,9 @@ _login(BuildContext context) async {
   if (_authInfo == null) {
     throw Exception('AuthInfo was not found');
   }
+
+  patient.createBucket();
+  patient.fetchSchema("did:snr:05638e57-4a6a-4451-94fa-111661fb3052");
   await MotorFlutter.to.login(
     password: _authInfo?.password ?? '',
     address: _authInfo?.address ?? '',
@@ -37,8 +43,12 @@ _login(BuildContext context) async {
   );
 
   Future.delayed(const Duration(milliseconds: 200), () {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const DashboardPage()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DashboardPage(
+                  patient: patient,
+                )));
   });
 }
 
@@ -63,8 +73,12 @@ class _StartPageState extends State<StartPage> {
         _authInfo = authCall.getAuthInfo();
       });
       Future.delayed(const Duration(milliseconds: 200), () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const DashboardPage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DashboardPage(
+                      patient: patient,
+                    )));
       });
     }
   }
@@ -216,6 +230,9 @@ class _buttonPathsState extends State<buttonPaths> {
     if (_authInfo == null) {
       throw Exception('AuthInfo was not found');
     }
+
+    patient.createBucket();
+    patient.fetchSchema("did:snr:05638e57-4a6a-4451-94fa-111661fb3052");
     await MotorFlutter.to.login(
       password: _authInfo?.password ?? '',
       address: _authInfo?.address ?? '',
@@ -224,8 +241,12 @@ class _buttonPathsState extends State<buttonPaths> {
     );
 
     Future.delayed(const Duration(milliseconds: 200), () {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const DashboardPage()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DashboardPage(
+                    patient: patient,
+                  )));
     });
   }
 
@@ -236,8 +257,12 @@ class _buttonPathsState extends State<buttonPaths> {
         _authInfo = authInfo;
       });
       Future.delayed(const Duration(milliseconds: 200), () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const DashboardPage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DashboardPage(
+                      patient: patient,
+                    )));
       });
     } else {
       throw Exception('AuthInfo was not passed to save');

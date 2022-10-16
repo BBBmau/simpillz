@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:motor_flutter_starter/main.dart';
 import 'input_page.dart';
+import 'package:motor_flutter_starter/models/sonr_data.dart' as sonrData;
+import 'register.dart';
 
 class Data {
   String dosageType;
@@ -16,8 +19,8 @@ class Data {
 bool isPrimaryCaretaker = true;
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
-
+  DashboardPage({Key? key, required this.patient}) : super(key: key);
+  sonrData.sonrClass patient;
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
@@ -25,6 +28,15 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
+    // called everytime we make a change to the bucket
+    void updateCounter() async {
+      return await patient.BUCKET.listItems().then((value) {
+        setState(() {
+          patient.bucketSize = value.length;
+        });
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(
@@ -79,11 +91,11 @@ class _DashboardPageState extends State<DashboardPage> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(4.0),
                     child: Text(
-                      "3 left",
-                      style: TextStyle(
+                      "${patient.bucketSize} left",
+                      style: const TextStyle(
                         fontSize: 17,
                         color: Colors.white,
                       ),

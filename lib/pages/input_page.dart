@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:motor_flutter_starter/main.dart';
 import 'package:motor_flutter_starter/pages/dashboard_page.dart';
+import 'package:motor_flutter/motor_flutter.dart';
 
 class InputPage extends StatefulWidget {
   const InputPage({super.key});
@@ -8,7 +10,25 @@ class InputPage extends StatefulWidget {
   State<InputPage> createState() => _InputPageState();
 }
 
+//TextEditingController alertController = TextEditingController();
+TextEditingController doseController = TextEditingController();
+TextEditingController frequencyController = TextEditingController();
+TextEditingController instructionsController = TextEditingController();
+TextEditingController nameController = TextEditingController();
+TextEditingController timeController = TextEditingController();
+TextEditingController totalDosageController = TextEditingController();
+TextEditingController typeController = TextEditingController();
+
 class _InputPageState extends State<InputPage> {
+  // called everytime we make a change to the bucket
+  void updateCounter() async {
+    return await patient.BUCKET.listItems().then((value) {
+      setState(() {
+        patient.bucketSize = value.length;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     const List<String> unit = <String>[
@@ -24,6 +44,14 @@ class _InputPageState extends State<InputPage> {
       '10'
     ];
     const List<String> frequency = <String>['Once', 'Twice', 'Thrice'];
+
+    final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+      minimumSize: const Size(80, 50),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+      ),
+    );
 
     bool isSwitched = true;
     String now = DateTime.now().toString().substring(0, 10);
@@ -84,11 +112,11 @@ class _InputPageState extends State<InputPage> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(4.0),
                     child: Text(
-                      "3 left",
-                      style: TextStyle(
+                      "${patient.bucketSize} left",
+                      style: const TextStyle(
                         fontSize: 17,
                         color: Colors.white,
                       ),
@@ -102,7 +130,9 @@ class _InputPageState extends State<InputPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const DashboardPage()));
+                                  builder: (context) => DashboardPage(
+                                        patient: patient,
+                                      )));
                         },
                         style: ElevatedButton.styleFrom(
                           fixedSize: const Size(50, 50),
@@ -139,6 +169,7 @@ class _InputPageState extends State<InputPage> {
                               padding:
                                   const EdgeInsets.fromLTRB(45, 20, 45, 20),
                               child: TextFormField(
+                                controller: nameController,
                                 decoration: const InputDecoration(
                                   border: UnderlineInputBorder(),
                                   labelText: 'Add the medicine name',
@@ -258,12 +289,13 @@ class _InputPageState extends State<InputPage> {
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  children: const [
+                                  children: [
                                     // Total dosage: -- dropdown
-                                    Text('Total Dosage',
+                                    const Text('Total Dosage',
                                         style: TextStyle(fontSize: 20)),
                                     TextField(
-                                      decoration: InputDecoration(
+                                      controller: totalDosageController,
+                                      decoration: const InputDecoration(
                                         hintText: '0',
                                         border: OutlineInputBorder(),
                                         constraints: BoxConstraints.tightFor(
@@ -301,9 +333,10 @@ class _InputPageState extends State<InputPage> {
                                 child: Container(
                                   margin: const EdgeInsets.all(12),
                                   height: 5 * 24.0,
-                                  child: const TextField(
+                                  child: TextField(
+                                    controller: instructionsController,
                                     maxLines: 5,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: "Enter a message",
                                       fillColor: Colors.white,
                                       filled: true,
@@ -313,6 +346,35 @@ class _InputPageState extends State<InputPage> {
                                           borderSide:
                                               BorderSide(color: Colors.blue)),
                                     ),
+                                  ),
+                                )),
+                            // submit button
+                            Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 5, 30, 5),
+                                child: Container(
+                                  margin: const EdgeInsets.all(12),
+                                  height: 5 * 24.0,
+                                  child: ElevatedButton(
+                                    style: raisedButtonStyle,
+                                    onPressed: () {
+                                      final doc =
+                                          patient.schema.newDocument("drug");
+                                      doc.set(
+                                          "dose", int.parse(unitDropdownValue));
+                                      doc.set("alert", isSwitched);
+                                      doc.set("frequency",
+                                          int.parse(frequencyDropdownValue));
+                                      doc.set("instructions",
+                                          instructionsController.text);
+                                      doc.set("name", nameController.text);
+                                      // doc.set("time", value)
+                                      doc.set("totalDosage",
+                                          int.parse(frequencyController.text));
+//doc.set("type", value)
+                                    },
+                                    child: const Text("Submit",
+                                        textScaleFactor: 1.2),
                                   ),
                                 )),
                           ],

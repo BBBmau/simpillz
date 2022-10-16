@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:motor_flutter/motor_flutter.dart';
-
+import 'package:motor_flutter_starter/models/sonr_data.dart' as sonrData;
 import 'package:motor_flutter_starter/pages/start_page.dart';
+
+sonrData.sonrClass patient = sonrData.sonrClass();
 
 Future<void> main() async {
   await MotorFlutter.init();

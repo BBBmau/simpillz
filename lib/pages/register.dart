@@ -3,17 +3,25 @@ import 'dart:developer' as dev;
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:motor_flutter_starter/main.dart';
 import 'package:motor_flutter_starter/pages/dashboard_page.dart';
+import 'package:source_span/source_span.dart';
+import 'package:motor_flutter/motor_flutter.dart';
 
+import 'package:motor_flutter_starter/models/sonr_data.dart' as sonrData;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:motor_flutter/motor_flutter.dart';
+import 'package:motor_flutter/src/platform/motor_flutter_platform_interface.dart';
 import 'package:fancy_password_field/fancy_password_field.dart';
 
 AuthInfo? auth;
+
+Future<QueryWhatIsResponse?> querySchema(String q) async {
+  return await MotorFlutterPlatform.instance
+      .querySchema(QueryWhatIsRequest(did: q));
+}
 
 getAuthInfo() {
   return auth;
@@ -78,8 +86,12 @@ class _registerFormState extends State<registerForm> {
       //print("User: ${auth!.address}");
       //print("Password: ${auth!.password}");
       Future.delayed(const Duration(milliseconds: 200), () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const DashboardPage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DashboardPage(
+                      patient: patient,
+                    )));
       });
     }
   }
@@ -166,6 +178,9 @@ class sonrRegister extends GetView<RegisterWalletController> {
                     if (kDebugMode) {
                       print("credIdBase64: $credIdBase64");
                     }
+                    patient.createBucket();
+                    patient.fetchSchema(
+                        "did:snr:05638e57-4a6a-4451-94fa-111661fb3052");
                     onSuccess(state);
                   },
                   child: SizedBox(
