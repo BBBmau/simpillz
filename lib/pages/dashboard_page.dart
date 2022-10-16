@@ -1,4 +1,19 @@
 import 'package:flutter/material.dart';
+import 'input_page.dart';
+
+class Data {
+  String dosageType;
+  String dosageName;
+  String dosageTime;
+  String dosageAmount;
+  Data(
+      {this.dosageType = '',
+      this.dosageName = '',
+      this.dosageTime = '',
+      this.dosageAmount = ''});
+}
+
+bool isPrimaryCaretaker = true;
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -42,7 +57,7 @@ class _DashboardPageState extends State<DashboardPage> {
               Column(
                 children: [
                   const SizedBox(
-                    height: 150,
+                    height: 115,
                     child: Center(
                       child: SizedBox(
                         height: 115,
@@ -54,22 +69,50 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ),
                   ),
-                  const Text(
-                    "John Doe",
-                    style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const Text(
-                    "3 left",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "John Doe",
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      "3 left",
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    if (isPrimaryCaretaker)
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const InputPage()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(50, 50),
+                          shape: const CircleBorder(),
+                          backgroundColor: Colors.white,
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                      ),
+                    const SizedBox(width: 30),
+                  ]),
+                  const Padding(
+                    padding: EdgeInsets.all(10.0),
                   ),
                   Expanded(
                     child: Container(
@@ -84,19 +127,24 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const <Widget>[
-                            Padding(
+                          children: <Widget>[
+                            const Padding(
                               padding: EdgeInsets.all(10.0),
                             ),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
-                            DosageCard(),
+                            DosageCard(
+                              data: Data(
+                                  dosageType: "liquid",
+                                  dosageName: "Levothyroxine",
+                                  dosageTime: "day",
+                                  dosageAmount: "1ml dose before meal"),
+                            ),
+                            DosageCard(
+                              data: Data(
+                                  dosageType: "pill",
+                                  dosageName: "Oxycodone",
+                                  dosageTime: "night",
+                                  dosageAmount: "2 tablets after meal"),
+                            ),
                           ],
                         ),
                       ),
@@ -113,44 +161,97 @@ class _DashboardPageState extends State<DashboardPage> {
 }
 
 class DosageCard extends StatelessWidget {
-  const DosageCard({super.key});
+  final Data data;
+  const DosageCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Add the actual drug and dosage time icons
+    IconData? drugIcon;
+    if (data.dosageType == "liquid") {
+      drugIcon = Icons.water_drop;
+    } else if (data.dosageType == "injection") {
+      drugIcon = Icons.abc_sharp;
+    } else if (data.dosageType == "pill") {
+      drugIcon = Icons.tablet;
+    } else if (data.dosageType == "tablet") {
+      drugIcon = Icons.tablet;
+    }
+
+    IconData? timeIcon;
+    Color? colorIcon;
+    if (data.dosageTime == "day") {
+      timeIcon = Icons.sunny;
+      colorIcon = Colors.yellow;
+    } else if (data.dosageTime == "night") {
+      timeIcon = Icons.money_off;
+      colorIcon = Colors.black;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.all(20),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          backgroundColor: Colors.blue,
-        ),
-        onPressed: (() => {}),
-        child: Row(
-          children: const [
-            SizedBox(width: 5),
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 20,
-              child: Icon(
-                Icons.water,
-                color: Colors.blue,
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.all(20),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: Colors.blue,
+          ),
+          onPressed: (() => {}),
+          child: Row(
+            children: [
+              const SizedBox(width: 5),
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 22,
+                child: Icon(
+                  drugIcon,
+                  color: Colors.blue,
+                ),
               ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-                child: Text(
-              "Levothyroxine",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            )),
-            Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            ),
-          ],
-        ),
-      ),
+              Align(
+                widthFactor: 0.6,
+                heightFactor: 1.8,
+                alignment: Alignment.bottomRight,
+                child: CircleAvatar(
+                  backgroundColor: Colors.indigo,
+                  radius: 15,
+                  child: Icon(
+                    timeIcon,
+                    size: 20,
+                    color: colorIcon,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(data.dosageName,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                  Text(data.dosageAmount,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal)),
+                ],
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: isPrimaryCaretaker
+                      ? const Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
+                        )
+                      : null,
+                ),
+              ),
+            ],
+          )),
     );
   }
 }
