@@ -6,17 +6,19 @@ class Data {
   String dosageName;
   String dosageTime;
   String dosageAmount;
+  bool dosageTaken = false;
   Data(
       {this.dosageType = '',
       this.dosageName = '',
       this.dosageTime = '',
-      this.dosageAmount = ''});
+      this.dosageAmount = '',
+      this.dosageTaken = false});
 }
 
 bool isPrimaryCaretaker = true;
 final List drugs = [
-  ["liquid", "Levothyroxine", "day", "1ml dose before meal"],
-  ["pill", "Oxycodone", "night", "2 tablets after meal"]
+  ["liquid", "Levothyroxine", "day", "1ml dose before meal", false],
+  ["pill", "Oxycodone", "night", "2 tablets after meal", false]
 ];
 
 // final List<String> drugs = [
@@ -142,17 +144,23 @@ class _DashboardPageState extends State<DashboardPage> {
                           final drugName = drugs[index][1];
                           final drugTime = drugs[index][2];
                           final drugAmount = drugs[index][3];
+                          var dosageTaken = drugs[index][4];
                           return Dismissible(
                             key: Key(drugName),
-                            onDismissed: (direction) {
-                              setState(() {
-                                drugs.removeAt(index);
-                              });
-
-                              // Then show a snackbar.
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('$drugName dismissed')));
+                            confirmDismiss: (DismissDirection direction) async {
+                              if (direction == DismissDirection.startToEnd) {
+                                setState(() {
+                                  drugs[index][4] = true;
+                                  dosageTaken = true;
+                                });
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const InputPage()));
+                              }
+                              return false;
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -162,7 +170,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                     dosageType: drugType,
                                     dosageName: drugName,
                                     dosageTime: drugTime,
-                                    dosageAmount: drugAmount),
+                                    dosageAmount: drugAmount,
+                                    dosageTaken: dosageTaken),
                               ),
                             ),
                           );
@@ -186,33 +195,39 @@ class DosageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Add the actual drug and dosage time icons
-    IconData? drugIcon;
+    var drugIcon;
     if (data.dosageType == "liquid") {
-      drugIcon = Icons.water_drop;
+      drugIcon = Icon(Icons.water_drop,
+          color: data.dosageTaken ? Colors.green : Colors.blue, size: 25);
     } else if (data.dosageType == "injection") {
-      drugIcon = Icons.abc_sharp;
+      drugIcon =
+          const ImageIcon(AssetImage("assets/icons/syringe.png"), size: 25);
     } else if (data.dosageType == "pill") {
-      drugIcon = Icons.tablet;
+      drugIcon = const ImageIcon(AssetImage("assets/icons/meds.png"), size: 25);
     } else if (data.dosageType == "tablet") {
-      drugIcon = Icons.tablet;
+      drugIcon =
+          const ImageIcon(AssetImage("assets/icons/pills.png"), size: 25);
     }
 
-    IconData? timeIcon;
+    var timeIcon;
     Color? colorIcon;
     if (data.dosageTime == "day") {
-      timeIcon = Icons.sunny;
       colorIcon = Colors.yellow;
+      timeIcon = Icon(
+        Icons.sunny,
+        size: 20,
+        color: colorIcon,
+      );
     } else if (data.dosageTime == "night") {
-      timeIcon = Icons.money_off;
-      colorIcon = Colors.black;
+      colorIcon = Colors.white;
+      timeIcon = const ImageIcon(AssetImage("assets/icons/moon.png"), size: 18);
     }
 
     return TextButton(
       style: TextButton.styleFrom(
         padding: const EdgeInsets.all(20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        backgroundColor: Colors.blue,
+        backgroundColor: data.dosageTaken ? Colors.green : Colors.blue,
       ),
       onPressed: (() => {}),
       child: Row(
@@ -221,24 +236,16 @@ class DosageCard extends StatelessWidget {
           CircleAvatar(
             backgroundColor: Colors.white,
             radius: 22,
-            child: Icon(
-              drugIcon,
-              color: Colors.blue,
-            ),
+            child: drugIcon,
           ),
           Align(
             widthFactor: 0.6,
             heightFactor: 1.8,
             alignment: Alignment.bottomRight,
             child: CircleAvatar(
-              backgroundColor: Colors.indigo,
-              radius: 15,
-              child: Icon(
-                timeIcon,
-                size: 20,
-                color: colorIcon,
-              ),
-            ),
+                backgroundColor: Colors.deepPurpleAccent,
+                radius: 15,
+                child: timeIcon),
           ),
           const SizedBox(width: 20),
           Column(
@@ -261,7 +268,7 @@ class DosageCard extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: isPrimaryCaretaker
                   ? const Icon(
-                      Icons.more_vert,
+                      Icons.arrow_back_ios,
                       color: Colors.white,
                     )
                   : null,
