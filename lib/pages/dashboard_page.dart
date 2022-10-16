@@ -11,17 +11,22 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-            child: Container(
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [
-        Colors.blue,
-        Colors.purple,
-        Colors.white,
-      ],
-    )))));
+      body: SafeArea(
+        child: Center(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.blue,
+                  Colors.green,
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

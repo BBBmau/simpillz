@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   motor_flutter: ^0.9.1
   get_storage: ^2.0.3
+  splashscreen: ^1.3.5
 
 dev_dependencies:
   flutter_test:
