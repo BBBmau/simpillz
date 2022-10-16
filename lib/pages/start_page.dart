@@ -117,6 +117,10 @@ class buttonPaths extends StatelessWidget {
       ElevatedButton(
           style: raisedButtonStyle,
           onPressed: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const DashboardPage()),
+            );
             // if (MotorFlutter.isReady) {
             //   final resp = await showDialog<AuthInfo>(
             //     context: context,
