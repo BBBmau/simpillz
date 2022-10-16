@@ -13,27 +13,30 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.blue,
-                  Colors.green,
-                ],
-              ),
-            ),
-            child: const Center(
-              child: Text(
-                'Dashboard Page!',
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.center,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.blue,
+                      Colors.lightGreen,
+                    ],
+                  ),
                 ),
               ),
-            ),
+              const Center(
+                child: SizedBox(
+                  height: 115,
+                  width: 115,
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("assets/images/old_man.jpeg"),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
