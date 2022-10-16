@@ -159,7 +159,7 @@ class _InputPageState extends State<InputPage> {
                                         const Icon(
                                           Icons.lock_clock,
                                           color: Colors.black,
-                                          size: 35,
+                                          size: 38,
                                         ),
                                         Text(
                                           now,
@@ -168,25 +168,26 @@ class _InputPageState extends State<InputPage> {
                                       ],
                                     ),
                                     const CircleAvatar(
-                                      backgroundColor: Colors.black,
+                                      backgroundColor: Colors.purple,
                                       radius: 22,
                                       child: Icon(
                                         Icons.sunny,
                                         color: Colors.white,
-                                        size: 35,
+                                        size: 22,
                                       ),
                                     ),
                                     const CircleAvatar(
-                                      backgroundColor: Colors.black,
+                                      backgroundColor: Colors.purple,
                                       radius: 22,
-                                      child: Icon(
-                                        Icons.access_alarm_rounded,
-                                        color: Colors.white,
-                                        size: 35,
-                                      ),
+                                      child: ImageIcon(
+                                          AssetImage("assets/icons/moon.png"),
+                                          size: 22),
                                     ),
                                     ElevatedButton(
                                         onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.purple,
+                                        ),
                                         child: const Text('All Day',
                                             style: TextStyle(fontSize: 17)))
                                   ]),
@@ -296,25 +297,85 @@ class _InputPageState extends State<InputPage> {
                             ),
                             // Instructions input
                             Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30, 5, 30, 5),
-                                child: Container(
-                                  margin: const EdgeInsets.all(12),
-                                  height: 5 * 24.0,
-                                  child: const TextField(
-                                    maxLines: 5,
-                                    decoration: InputDecoration(
-                                      hintText: "Enter a message",
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5.0)),
-                                          borderSide:
-                                              BorderSide(color: Colors.blue)),
-                                    ),
+                              padding: const EdgeInsets.fromLTRB(30, 5, 30, 5),
+                              child: Container(
+                                margin: const EdgeInsets.all(12),
+                                height: 5 * 24.0,
+                                child: const TextField(
+                                  maxLines: 5,
+                                  decoration: InputDecoration(
+                                    hintText: "Enter a message",
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.blue)),
                                   ),
-                                )),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(30, 5, 30, 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: const Size(50, 50),
+                                      shape: const CircleBorder(),
+                                      backgroundColor: Colors.blue,
+                                    ),
+                                    child: const Icon(Icons.water_drop,
+                                        color: Colors.white, size: 25),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: const Size(50, 50),
+                                      shape: const CircleBorder(),
+                                      backgroundColor: Colors.blue,
+                                    ),
+                                    child: const ImageIcon(
+                                        AssetImage("assets/icons/pills.png"),
+                                        size: 25),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: const Size(50, 50),
+                                      shape: const CircleBorder(),
+                                      backgroundColor: Colors.blue,
+                                    ),
+                                    child: const ImageIcon(
+                                        AssetImage("assets/icons/meds.png"),
+                                        size: 25),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: const Size(50, 50),
+                                      shape: const CircleBorder(),
+                                      backgroundColor: Colors.blue,
+                                    ),
+                                    child: const ImageIcon(
+                                        AssetImage("assets/icons/syringe.png"),
+                                        size: 25),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(200, 50),
+                                backgroundColor: Colors.blue,
+                              ),
+                              child: const Text('Submit'),
+                            ),
                           ],
                         ),
                       ),

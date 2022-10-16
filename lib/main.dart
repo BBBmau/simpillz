@@ -36,14 +36,14 @@ class Splash2 extends StatelessWidget {
       seconds: 1,
       navigateAfterSeconds: const SecondScreen(),
       title: const Text(
-        'TEMPNAME',
+        'SIMPILLZ',
         textScaleFactor: 2,
       ),
-      // image: Image.network(
-      //     'https://example.com/pic.png'),
+      image: Image.network('https://i.imgur.com/RlyFRzQ.png'),
       loadingText: const Text("Loading"),
       photoSize: 100.0,
-      loaderColor: Colors.blue,
+      loaderColor: Colors.white,
+      backgroundColor: Colors.blue,
     );
   }
 }
