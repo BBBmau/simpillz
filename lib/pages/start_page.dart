@@ -36,7 +36,7 @@ _login(BuildContext context) async {
     pskKey: _authInfo?.aesPskKey,
   );
 
-  Future.delayed(const Duration(milliseconds: 400), () {
+  Future.delayed(const Duration(milliseconds: 200), () {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const DashboardPage()));
   });
@@ -62,7 +62,7 @@ class _StartPageState extends State<StartPage> {
       setState(() {
         _authInfo = authCall.getAuthInfo();
       });
-      Future.delayed(const Duration(milliseconds: 400), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const DashboardPage()));
       });
@@ -223,7 +223,7 @@ class _buttonPathsState extends State<buttonPaths> {
       pskKey: _authInfo?.aesPskKey,
     );
 
-    Future.delayed(const Duration(milliseconds: 400), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const DashboardPage()));
     });
@@ -235,7 +235,7 @@ class _buttonPathsState extends State<buttonPaths> {
       setState(() {
         _authInfo = authInfo;
       });
-      Future.delayed(const Duration(milliseconds: 400), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const DashboardPage()));
       });

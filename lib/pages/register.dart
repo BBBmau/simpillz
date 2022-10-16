@@ -77,7 +77,7 @@ class _registerFormState extends State<registerForm> {
       });
       //print("User: ${auth!.address}");
       //print("Password: ${auth!.password}");
-      Future.delayed(const Duration(milliseconds: 400), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const DashboardPage()));
       });
