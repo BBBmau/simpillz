@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motor_flutter_starter/pages/dashboard_page.dart';
 
 class InputPage extends StatefulWidget {
   const InputPage({super.key});
@@ -10,6 +11,25 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   @override
   Widget build(BuildContext context) {
+    const List<String> unit = <String>[
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10'
+    ];
+    const List<String> frequency = <String>['Once', 'Twice', 'Thrice'];
+
+    bool isSwitched = true;
+    String now = DateTime.now().toString().substring(0, 10);
+    String unitDropdownValue = unit.first;
+    String frequencyDropdownValue = frequency.first;
+
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(
@@ -76,17 +96,26 @@ class _InputPageState extends State<InputPage> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 25,
-                        child: Icon(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const DashboardPage()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(50, 50),
+                          shape: const CircleBorder(),
+                          backgroundColor: Colors.white,
+                        ),
+                        child: const Icon(
                           Icons.cancel,
                           color: Colors.black,
                           size: 30,
                         ),
                       ),
-                      SizedBox(width: 30),
+                      const SizedBox(width: 30),
                     ],
                   ),
                   const Padding(
@@ -112,10 +141,180 @@ class _InputPageState extends State<InputPage> {
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   border: UnderlineInputBorder(),
-                                  labelText: 'Enter your username',
+                                  labelText: 'Add the medicine name',
                                 ),
                               ),
                             ),
+                            //Icons - current time and dosage time
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(45, 20, 45, 20),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Date: Three Icons
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.lock_clock,
+                                          color: Colors.black,
+                                          size: 35,
+                                        ),
+                                        Text(
+                                          now,
+                                          style: const TextStyle(fontSize: 17),
+                                        ),
+                                      ],
+                                    ),
+                                    const CircleAvatar(
+                                      backgroundColor: Colors.black,
+                                      radius: 22,
+                                      child: Icon(
+                                        Icons.sunny,
+                                        color: Colors.white,
+                                        size: 35,
+                                      ),
+                                    ),
+                                    const CircleAvatar(
+                                      backgroundColor: Colors.black,
+                                      radius: 22,
+                                      child: Icon(
+                                        Icons.access_alarm_rounded,
+                                        color: Colors.white,
+                                        size: 35,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {},
+                                        child: const Text('All Day',
+                                            style: TextStyle(fontSize: 17)))
+                                  ]),
+                            ),
+                            //Dosage Input
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(45, 5, 45, 5),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Dosage: -- and freq dropdown
+                                    const Text('Dosage',
+                                        style: TextStyle(fontSize: 20)),
+                                    DropdownButton<String>(
+                                      value: unitDropdownValue,
+                                      icon: const Icon(Icons.arrow_drop_down),
+                                      elevation: 16,
+                                      style: const TextStyle(
+                                          color: Colors.deepPurple),
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.deepPurpleAccent,
+                                      ),
+                                      onChanged: (String? value) {
+                                        // This is called when the user selects an item.
+                                        setState(() {
+                                          unitDropdownValue = value!;
+                                        });
+                                      },
+                                      items: unit.map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    DropdownButton<String>(
+                                      value: frequencyDropdownValue,
+                                      icon: const Icon(Icons.arrow_drop_down),
+                                      elevation: 16,
+                                      style: const TextStyle(
+                                          color: Colors.deepPurple),
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.deepPurpleAccent,
+                                      ),
+                                      onChanged: (String? value) {
+                                        // This is called when the user selects an item.
+                                        setState(() {
+                                          frequencyDropdownValue = value!;
+                                        });
+                                      },
+                                      items: frequency
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ]),
+                            ),
+                            // Total dosage
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(45, 5, 45, 0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: const [
+                                    // Total dosage: -- dropdown
+                                    Text('Total Dosage',
+                                        style: TextStyle(fontSize: 20)),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        hintText: '0',
+                                        border: OutlineInputBorder(),
+                                        constraints: BoxConstraints.tightFor(
+                                            width: 80, height: 40),
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                            // Alert toggle
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(45, 5, 45, 0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Alert me to refill
+                                    const Text('Alert me to refill',
+                                        style: TextStyle(fontSize: 20)),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Switch(
+                                          value: isSwitched,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              isSwitched = value;
+                                            });
+                                          }),
+                                    ),
+                                  ]),
+                            ),
+                            // Instructions input
+                            Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 5, 30, 5),
+                                child: Container(
+                                  margin: const EdgeInsets.all(12),
+                                  height: 5 * 24.0,
+                                  child: const TextField(
+                                    maxLines: 5,
+                                    decoration: InputDecoration(
+                                      hintText: "Enter a message",
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide:
+                                              BorderSide(color: Colors.blue)),
+                                    ),
+                                  ),
+                                )),
                           ],
                         ),
                       ),
