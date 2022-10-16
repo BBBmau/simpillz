@@ -39,7 +39,7 @@ class Splash2 extends StatelessWidget {
         'SIMPILLZ',
         textScaleFactor: 2,
       ),
-      image: Image.network('https://i.imgur.com/RlyFRzQ.png'),
+      image: const Image(image: AssetImage("assets/images/logo.png")),
       loadingText: const Text("Loading"),
       photoSize: 100.0,
       loaderColor: Colors.white,

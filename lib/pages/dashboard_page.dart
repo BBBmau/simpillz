@@ -137,45 +137,86 @@ class _DashboardPageState extends State<DashboardPage> {
                           topLeft: Radius.circular(40.0),
                         ),
                       ),
-                      child: ListView.builder(
-                        itemCount: drugs.length,
-                        itemBuilder: (context, index) {
-                          final drugType = drugs[index][0];
-                          final drugName = drugs[index][1];
-                          final drugTime = drugs[index][2];
-                          final drugAmount = drugs[index][3];
-                          var dosageTaken = drugs[index][4];
-                          return Dismissible(
-                            key: Key(drugName),
-                            confirmDismiss: (DismissDirection direction) async {
-                              if (direction == DismissDirection.startToEnd) {
-                                setState(() {
-                                  drugs[index][4] = true;
-                                  dosageTaken = true;
-                                });
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const InputPage()));
-                              }
-                              return false;
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: DosageCard(
-                                data: Data(
-                                    dosageType: drugType,
-                                    dosageName: drugName,
-                                    dosageTime: drugTime,
-                                    dosageAmount: drugAmount,
-                                    dosageTaken: dosageTaken),
-                              ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            height: 100,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {},
+                                    child: IconButton(
+                                      icon: const Icon(Icons.arrow_back),
+                                      onPressed: () {},
+                                    )),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Text('Monday',
+                                        style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold)),
+                                    Text('16 October',
+                                        style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {},
+                                    child: IconButton(
+                                      icon: const Icon(Icons.arrow_forward),
+                                      onPressed: () {},
+                                    )),
+                              ],
                             ),
-                          );
-                        },
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: drugs.length,
+                              itemBuilder: (context, index) {
+                                final drugType = drugs[index][0];
+                                final drugName = drugs[index][1];
+                                final drugTime = drugs[index][2];
+                                final drugAmount = drugs[index][3];
+                                var dosageTaken = drugs[index][4];
+                                return Dismissible(
+                                  key: Key(drugName),
+                                  confirmDismiss:
+                                      (DismissDirection direction) async {
+                                    if (direction ==
+                                        DismissDirection.startToEnd) {
+                                      setState(() {
+                                        drugs[index][4] = true;
+                                        dosageTaken = true;
+                                      });
+                                    } else {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const InputPage()));
+                                    }
+                                    return false;
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 10),
+                                    child: DosageCard(
+                                      data: Data(
+                                          dosageType: drugType,
+                                          dosageName: drugName,
+                                          dosageTime: drugTime,
+                                          dosageAmount: drugAmount,
+                                          dosageTaken: dosageTaken),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
