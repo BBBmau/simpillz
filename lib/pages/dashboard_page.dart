@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Data {
-  String doseType;
+  String dosageType;
   String dosageName;
   String dosageTime;
   String dosageAmount;
   Data(
-      {this.doseType = '',
+      {this.dosageType = '',
       this.dosageName = '',
       this.dosageTime = '',
       this.dosageAmount = ''});
@@ -102,14 +102,14 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                             DosageCard(
                               data: Data(
-                                  doseType: "liquid",
+                                  dosageType: "liquid",
                                   dosageName: "Levothyroxine",
                                   dosageTime: "day",
                                   dosageAmount: "1ml dose before meal"),
                             ),
                             DosageCard(
                               data: Data(
-                                  doseType: "pill",
+                                  dosageType: "pill",
                                   dosageName: "Oxycodone",
                                   dosageTime: "night",
                                   dosageAmount: "2 tablets after meal"),
@@ -135,6 +135,28 @@ class DosageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO
+    IconData? drugIcon;
+    if (data.dosageType == "liquid") {
+      drugIcon = Icons.water_drop;
+    } else if (data.dosageType == "injection") {
+      drugIcon = Icons.abc_sharp;
+    } else if (data.dosageType == "pill") {
+      drugIcon = Icons.tablet;
+    } else if (data.dosageType == "tablet") {
+      drugIcon = Icons.tablet;
+    }
+
+    IconData? timeIcon;
+    Color? colorIcon;
+    if (data.dosageTime == "day") {
+      timeIcon = Icons.sunny;
+      colorIcon = Colors.yellow;
+    } else if (data.dosageTime == "night") {
+      timeIcon = Icons.money_off;
+      colorIcon = Colors.black;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
@@ -148,15 +170,15 @@ class DosageCard extends StatelessWidget {
         child: Row(
           children: [
             const SizedBox(width: 5),
-            const CircleAvatar(
+            CircleAvatar(
               backgroundColor: Colors.white,
               radius: 22,
               child: Icon(
-                Icons.water_drop,
+                drugIcon,
                 color: Colors.blue,
               ),
             ),
-            const Align(
+            Align(
               widthFactor: 0.6,
               heightFactor: 1.8,
               alignment: Alignment.bottomRight,
@@ -164,9 +186,9 @@ class DosageCard extends StatelessWidget {
                 backgroundColor: Colors.indigo,
                 radius: 15,
                 child: Icon(
-                  Icons.sunny,
+                  timeIcon,
                   size: 20,
-                  color: Colors.yellow,
+                  color: colorIcon,
                 ),
               ),
             ),
